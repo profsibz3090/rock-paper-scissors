@@ -34,6 +34,7 @@ function gameFinished() {
    win = 0;
    tied = 0;
    round = 0;
+   resultDisplayElement.innerText = "";
    document.querySelector('.results').appendChild(scoreDisplayElement);
 }
 
