@@ -2,13 +2,36 @@ let win = 0;
 let lose = 0;
 let tied = 0;
 let round = 0;
+let computerSelection = '';
+let over = false;
 
-document.querySelector('#rock').addEventListener('click', ()=> playRound('rock', getComputerChoice()));
-document.querySelector('#paper').addEventListener('click', ()=> playRound('paper', getComputerChoice()));
-document.querySelector('#scissors').addEventListener('click', ()=> playRound('scissors', getComputerChoice()));
+function playAgain() {
+    over = false;
+    computerSelection = '';
+    tied = 0;
+    lose = 0;
+    win = 0;
+    round = 0;
+    const path = './assets/mark.png';
+    document.querySelector('#result').innerText = 'Choose your weapon';
+    document.querySelector('#commentary').innerText = 'First to 5 points wins the game';
+    document.querySelector('.left img').src = path;
+    document.querySelector('.right img').src = path;
+    document.querySelector('#player').innerText = `Player: ${win}`;
+    document.querySelector('#computer').innerText = `Computer: ${lose}`;
+    document.getElementById('reset-section').classList.toggle('is-show');   
+}
 
-const resultDisplayElement = document.createElement('p');
-const scoreDisplayElement = document.createElement('p');
+let playerSelection = "rock";
+
+function setUp() {
+    document.querySelectorAll('div.container > img').forEach(img => {
+        img.addEventListener('click', run)
+    });
+    document.getElementById('again').addEventListener('click', playAgain)
+}
+
+setUp();
 
 function getComputerChoice() {
     const rand = (Math.random() * 10);
@@ -24,18 +47,56 @@ function getComputerChoice() {
     return move;
 }
 
+function gameOver() {
+    
+    if(win >= 5 || lose >= 5){
+     const winner = win > lose? 'you' : 'the computer';
+     document.querySelector('#winner').innerText = `The winner is ${winner}`;
+     document.querySelector('div.is-show').classList.toggle('is-show');          
+     over = true;
+    }
+}
 
+function run(event) {
+   if(over){
+    //  alert('zvavharwa')
+     return;
+    }
+   playerSelection = event.target.id;
+   computerSelection = getComputerChoice();
+   const result = playRound(playerSelection, computerSelection);
+   determineWinner(result)
+   const parts = result.split('!');
+   document.querySelector('#result').innerText = parts[0];
+   document.querySelector('#commentary').innerText = parts[1];
+   document.querySelector('.left img').src = determineImageToDisplay(playerSelection);
+   document.querySelector('.right img').src = determineImageToDisplay(computerSelection);
+   document.querySelector('#player').innerText = `Player: ${win}`;
+   document.querySelector('#computer').innerText = `Computer: ${lose}`;
+}
 
-function gameFinished() {
-    scoreDisplayElement.innerText = tied === 5? `you tied with ${win} win/wins ${lose} lose/loses and ${tied} ties`  :win > lose? 
-    `you are the overall winner with ${win} win/wins ${lose} lose/loses and ${tied} ties`
-  : `computer is the overall winner with ${win} win/wins ${lose} lose/loses and ${tied} ties`;
-    lose = 0;
-   win = 0;
-   tied = 0;
-   round = 0;
-   resultDisplayElement.innerText = "";
-   document.querySelector('.results').appendChild(scoreDisplayElement);
+function determineImageToDisplay(imageName) {
+    switch (imageName) {
+        case 'rock':
+            return './assets/rock.png';
+        case 'scissors':
+            return './assets/scissors.png';
+        case 'paper':
+            return './assets/paper.png';
+        default:
+            return './assets/rock.png';
+    }
+}
+
+function determineWinner(result) {
+    if(result.includes('You Win')) {
+        win++;
+    } else if(result.includes('You Lose')){
+         lose++;
+    } else if(result.includes('You Tied')) {
+         tied++;
+    }
+    gameOver();
 }
 
 function playRound(playerSelection, computerSelection) {
@@ -66,50 +127,5 @@ function playRound(playerSelection, computerSelection) {
           }
     }
     round++;
-    round === 5 && gameFinished();  
-    // determineWinner(result);
-    if(result.includes('You Win')) {
-        win++;
-     } else if(result.includes('You Lose')){
-         lose++;
-     } else if(result.includes('You Tied')) {
-         tied++;
-     }
-    resultDisplayElement.innerText = result;
-    document.querySelector('.results').appendChild(resultDisplayElement);
-    return result;
-}
-
-function game() {
-    // let win = 0;
-    // let lose = 0;
-    // let tied = 0;
-    for (let index = 0; index < 5; index++) {
-        const computerSelection = getComputerChoice();
-        const playerSelection = prompt("pick a move(rock, paper, scissors)", "rock");
-        let result = playRound(playerSelection, computerSelection);
-        console.log(result);
-        if(result.includes('You Win')) {
-            win++;
-         } else if(result.includes('You Lose')){
-             lose++;
-         } else if(result.includes('You Tied')) {
-             tied++;
-         }
-    }
-    return tied === 5? `you tied with ${win} win/wins ${lose} lose/loses and ${tied} ties`  :win > lose? 
-                        `you are the overall winner with ${win} win/wins ${lose} lose/loses and ${tied} ties`
-                      : `computer is the overall winner with ${win} win/wins ${lose} lose/loses and ${tied} ties`;
-}
-
-
-function determineWinner(result) {
-
-    if(result.includes('you win')) {
-       win++;
-    } else if(result.includes('you lose')){
-        lose++;
-    } else if(result.includes('you tied')) {
-        tied++;
-    }
+     return result;
 }
