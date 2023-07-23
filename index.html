@@ -4,19 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="rock">
-      Rock
-    </button>
-    <button id="paper">
-      Paper
-    </button>
-    <button id="scissors">
-      Scisssors
-    </button>
-    <div class="results">
-        
+    <div class="action">
+      <h2 id="result">Choose your weapon</h2>
+      <p id="commentary">First to 5 points wins the game</p>
+      <div class="picked">
+        <div class="left">
+          <img src="./assets/mark.png" alt="question mark">
+          <p id="player">Player: 0</p>
+        </div>
+        <div class="right">
+          <img src="./assets/mark.png" alt="question mark">
+          <p id="computer">Computer: 0</p>
+        </div>
+      </div>
+    </div>
+    <div class="moves">
+      <div class="container">
+        <img src="./assets/rock.png" alt="rock" id="rock">
+        <p class="name">Rock</p>
+      </div>
+      <div class="container">
+        <img src="./assets/paper.png" alt="paper" id="paper">
+        <p class="name">Paper</p>
+      </div>
+      <div class="container">
+        <img src="./assets/scissors.png" alt="scissors" id="scissors">
+        <p class="name">Scissors</p>
+      </div>
+    </div>
+    <div class="reset is-show" id="reset-section">
+        <p id="winner"></p>
+        <button class="announce" id="again">Play Again</button>
     </div>
     <script src="./game.js"></script>
 </body>
